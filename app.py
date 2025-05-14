@@ -1,42 +1,54 @@
+import streamlit as st
 from gtts import gTTS
 import os
+import time
 from playsound import playsound
 
-# Your Spanish script text
-spanish_script = """
-Bienvenido a TruckMetrics video
+# Streamlit App Layout
+st.title('Text-to-Speech (TTS) Demo')
 
-Esta es una sesión de capacitación del MetricsManager Pro, diseñada para brindarte instrucciones claras.
-Específicamente, para usuarios de MetricsManager Pro que han instalado TruckMetrics en sus sitios.
+st.subheader("Test different TTS Settings")
 
-Ten en cuenta que esta capacitación no incluye hardware ni información de instalación, para eso, 
-consulta el manual de TruckMetrics, que puedes encontrar adjunto en este artículo. 
+# Input text box for user
+text_input = st.text_area("Enter the text for TTS", "¡Hola! ¿Cómo estás?", height=150)
 
-La agenda de hoy abarca los módulos disponibles en TruckMetrics, 
-incluyendo las características en MetricsManager Pro, como el tablero, distribución de tamaño de partícula, PSD, productividad y reportabilidad de la galería. 
-"""
+# Language selection
+language = st.selectbox("Select Language", ["es", "en", "fr", "de"], index=0)
 
-# Function to generate audio
-def generate_audio(text, output_file):
+# Speech Rate
+rate = st.slider("Speech Rate", min_value=50, max_value=200, value=120, step=10)
+
+# Output file path
+output_file = "tts_output.mp3"
+
+# Function to generate TTS audio
+def generate_tts(text, lang, speed, output_file):
     try:
-        # Generate TTS audio
-        tts = gTTS(text=text, lang='es')
+        tts = gTTS(text=text, lang=lang, slow=False)  # gTTS does not take speed directly
         tts.save(output_file)
-        print(f"✅ Audio dubbing saved as: {output_file}")
-        
-        # Play the audio file
-        playsound(output_file)
-        print("✅ Audio played successfully.")
-        
+        return True
     except Exception as e:
-        print(f"❌ Error generating or playing TTS: {e}")
+        st.error(f"Error: {e}")
+        return False
 
-# File path for saved audio
-output_file = "dubbing_output.mp3"
+# Generate audio when the button is clicked
+if st.button("Generate and Play Audio"):
+    with st.spinner('Generating audio...'):
+        time.sleep(2)  # Simulating some delay in audio generation
 
-# Check if the output file already exists, if yes, delete it
-if os.path.exists(output_file):
-    os.remove(output_file)
+        # Generate TTS
+        if generate_tts(text_input, language, rate, output_file):
+            st.success("Audio Generated Successfully!")
 
-# Generate and play the audio
-generate_audio(spanish_script, output_file)
+            # Play Audio
+            st.audio(output_file, format="audio/mp3")
+            
+            # Download option
+            st.download_button(
+                label="Download the Audio",
+                data=open(output_file, "rb").read(),
+                file_name="generated_audio.mp3",
+                mime="audio/mp3"
+            )
+        else:
+            st.error("Something went wrong while generating the audio.")
