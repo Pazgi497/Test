@@ -1,3 +1,4 @@
-streamlit==1.45.1
-jupyterlab==4.4.2
-plotly
+streamlit
+matplotlib
+numpy
+
