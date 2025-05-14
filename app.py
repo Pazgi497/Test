@@ -1,49 +1,40 @@
 import streamlit as st
+import plotly.graph_objects as go
+import plotly.express as px
 import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 # Title of the app
-st.title("Streamlit Demo: Histograms and Bar Charts")
+st.title("Streamlit + Plotly Demo")
 
-# Sidebar with options
+# Sidebar for selecting chart type
 st.sidebar.header("Select Chart Type")
 chart_type = st.sidebar.selectbox("Choose chart", ["Histogram", "Bar Chart"])
 
-# Generate some random data for demo
+# Generate random data
 data = np.random.randn(1000)
 
-# Display histogram
+# Display Histogram using Plotly
 if chart_type == "Histogram":
-    st.subheader("Histogram")
-    fig, ax = plt.subplots()
-    ax.hist(data, bins=30, edgecolor='black')
-    ax.set_title("Histogram of Random Data")
-    ax.set_xlabel("Value")
-    ax.set_ylabel("Frequency")
-    st.pyplot(fig)
+    st.subheader("Histogram with Plotly")
+    fig = px.histogram(data_frame=data, nbins=30, title="Histogram of Random Data")
+    fig.update_layout(
+        xaxis_title="Value",
+        yaxis_title="Frequency"
+    )
+    st.plotly_chart(fig)
 
-# Display bar chart
+# Display Bar Chart using Plotly
 elif chart_type == "Bar Chart":
-    st.subheader("Bar Chart")
-    
-    # Create some sample categorical data
+    st.subheader("Bar Chart with Plotly")
+
+    # Create categorical data
     categories = ['A', 'B', 'C', 'D', 'E']
     values = [23, 45, 56, 78, 33]
-    
-    fig, ax = plt.subplots()
-    ax.bar(categories, values, color='skyblue')
-    ax.set_title("Bar Chart of Sample Categories")
-    ax.set_xlabel("Category")
-    ax.set_ylabel("Value")
-    st.pyplot(fig)
 
-# A bit of styling
-st.markdown("""
-<style>
-    .sidebar .sidebar-content {
-        background-color: #f1f1f1;
-    }
-</style>
-""", unsafe_allow_html=True)
+    fig = go.Figure(data=[go.Bar(x=categories, y=values)])
+    fig.update_layout(
+        title="Bar Chart of Sample Categories",
+        xaxis_title="Category",
+        yaxis_title="Value"
+    )
+    st.plotly_chart(fig)
