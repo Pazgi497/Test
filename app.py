@@ -1,40 +1,38 @@
 import streamlit as st
-import plotly.graph_objects as go
-import plotly.express as px
 import numpy as np
+import matplotlib.pyplot as plt
 
 # Title of the app
-st.title("Streamlit + Plotly Demo")
+st.title("Basic Streamlit Demo")
 
-# Sidebar for selecting chart type
+# Sidebar with options
 st.sidebar.header("Select Chart Type")
 chart_type = st.sidebar.selectbox("Choose chart", ["Histogram", "Bar Chart"])
 
-# Generate random data
+# Generate some random data for demo
 data = np.random.randn(1000)
 
-# Display Histogram using Plotly
+# Display histogram
 if chart_type == "Histogram":
-    st.subheader("Histogram with Plotly")
-    fig = px.histogram(data_frame=data, nbins=30, title="Histogram of Random Data")
-    fig.update_layout(
-        xaxis_title="Value",
-        yaxis_title="Frequency"
-    )
-    st.plotly_chart(fig)
+    st.subheader("Histogram")
+    fig, ax = plt.subplots()
+    ax.hist(data, bins=30, edgecolor='black')
+    ax.set_title("Histogram of Random Data")
+    ax.set_xlabel("Value")
+    ax.set_ylabel("Frequency")
+    st.pyplot(fig)
 
-# Display Bar Chart using Plotly
+# Display bar chart
 elif chart_type == "Bar Chart":
-    st.subheader("Bar Chart with Plotly")
-
-    # Create categorical data
+    st.subheader("Bar Chart")
+    
+    # Create some sample categorical data
     categories = ['A', 'B', 'C', 'D', 'E']
     values = [23, 45, 56, 78, 33]
-
-    fig = go.Figure(data=[go.Bar(x=categories, y=values)])
-    fig.update_layout(
-        title="Bar Chart of Sample Categories",
-        xaxis_title="Category",
-        yaxis_title="Value"
-    )
-    st.plotly_chart(fig)
+    
+    fig, ax = plt.subplots()
+    ax.bar(categories, values, color='skyblue')
+    ax.set_title("Bar Chart of Sample Categories")
+    ax.set_xlabel("Category")
+    ax.set_ylabel("Value")
+    st.pyplot(fig)
