@@ -1,34 +1,18 @@
 import streamlit as st
-from gtts import gTTS
-import os
-from io import BytesIO
+import pandas as pd
+import numpy as np
 
-# Page configuration
-st.set_page_config(page_title="Text to Speech (gTTS)", layout="centered")
+st.title("Simple Data Visualization Demo")
 
-# Title
-st.markdown("<h1 style='text-align: center;'>🗣️ Text to Speech (gTTS)</h1>", unsafe_allow_html=True)
-st.markdown("Convert your Spanish text into spoken audio easily.")
+st.write("This demo shows a random dataframe and a line chart.")
 
-# Form layout
-with st.form("tts_form"):
-    text = st.text_area("📝 Enter your text (in Spanish):", "Hola, ¿cómo estás?")
-    lang = st.selectbox("🌐 Select language:", ["es"], help="Currently only Spanish is supported.")
-    submitted = st.form_submit_button("🎧 Convert and Play")
+# Generate random data
+data = pd.DataFrame(
+    np.random.randn(20, 3),
+    columns=['A', 'B', 'C']
+)
 
-# Handle form submission
-if submitted:
-    if not text.strip():
-        st.error("⚠️ Please enter some text before converting.")
-    else:
-        # Convert text to speech
-        tts = gTTS(text, lang=lang)
-        mp3_fp = BytesIO()
-        tts.write_to_fp(mp3_fp)
-        mp3_fp.seek(0)
-        
-        st.success("✅ Conversion successful! Listen below:")
-        st.audio(mp3_fp, format="audio/mp3")
-        st.markdown("---")
-        st.info("Powered by gTTS (Google Text-to-Speech)")
+st.write("Here's the data:")
+st.dataframe(data)
 
+st.line_chart(data)
