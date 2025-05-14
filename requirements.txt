@@ -3,3 +3,4 @@ streamlit==1.45.1
 jupyterlab==4.4.2
 playsound==1.2.2
 pydub==0.25.1
+plotly
